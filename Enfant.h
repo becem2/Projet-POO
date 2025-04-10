@@ -1,40 +1,24 @@
-#include <iostream>
-#include <string>
 
-using namespace std;
+#include "Allergie.cpp"
 
-struct date{
-    int jour;
-    int mois;
-    int annee;
-};
-typedef struct date DATE;
+
 
 class Enfant {
     protected:
-        int CodeEnfant;
-        string Name;
-        string Lastname;
-        DATE Age;
-
+        string nom;
+        string prenom;
+        int age;
+        string specificNeeds;
+        vector <Allergie*> allergie;
+    
     public:
         Enfant();
-        Enfant(const Enfant &);
-        Enfant(int,string,string,DATE);
-        virtual void Afficher();
-        void SetCodeEnfant(int );
-        void SetName(string);
-        void SetLastname(string);
-        void SetAge(DATE);
-        int GetCodeEnfant();
-        string GetName();
-        string GetLastname();
-        DATE GetAge();
-        int GetDay();
-        int GetMonth();
-        int GetYear();
-        virtual ~Enfant();
-
-
-
-};
+        Enfant(const string& nom, const string& prenom, int age, const string& specificNeeds = "");
+        Enfant(const Enfant&);
+        virtual void ajouterAllergie(Allergie*);
+        virtual void afficher() const;
+        void saisirEnfant();
+        string getNom() const;
+        string getPrenom() const;
+        virtual ~Enfant() = default;
+    };

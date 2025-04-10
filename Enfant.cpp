@@ -1,50 +1,61 @@
 #include "Enfant.h"
 
+Enfant::Enfant() : nom(""), prenom(""), age(0), specificNeeds("") {}
+
+Enfant::Enfant(const string& nom, const string& prenom, int age, const string& specificNeeds)
+    : nom(nom), prenom(prenom), age(age), specificNeeds(specificNeeds) {}
+
+ void Enfant::saisirEnfant() {
+    cout << "===== Saisie des informations d'un enfant =====\n";
+
+    cout << "Nom : ";
+    cin >> nom;
+
+    cout << "Prénom : ";
+    cin >> prenom;
+
+    while (true) {
+        cout << "Âge : ";
+        cin >> age;
+        if (cin.fail() || age <= 0) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Veuillez entrer un âge valide !\n";
+        } else {
+            break;
+        }
+    }
+
+    cout << "Besoins spécifiques (laisser vide si aucun) : ";
+    cin.ignore();
+    getline(cin, specificNeeds);
+
+    cout << "Enfant enregistré avec succès !\n";
+}
+
+Enfant::Enfant(const Enfant& e) {
+    nom = e.nom;
+    prenom = e.prenom;
+    age = e.age ;
+    specificNeeds = e.specificNeeds ;
+    for (auto& a : e.allergie) {
+        allergie.push_back(new Allergie(*a));
+    }
+    cout <<"Constructeur de recopie appele !"<< endl;
+}
+
+void Enfant::ajouterAllergie(Allergie* a) {
+    allergie.push_back(a);
+}
+
+void Enfant::afficher() const {
+    cout << "Nom: " << nom << ", Prenom: " << prenom << ", Age: " << age << " ans";
+    if (!specificNeeds.empty()) {
+        cout << ", Besoins spécifiques: " << specificNeeds;
+    }
+    cout << "\n";
+}
 
 
-Enfant::Enfant() : CodeEnfant(0), Name("deflaut"), Lastname("deflaut"), Age{0, 0, 0} {}
-Enfant::Enfant(int c ,string n,string p,DATE d) : CodeEnfant(c),Name(n),Lastname(p),Age(d){}
-Enfant::Enfant(const Enfant &){}
-void Enfant::Afficher(){
-    cout<<"Code Enfant est : "<<CodeEnfant<<endl;
-    cout<<"Nom Enfant est : "<<Name<<endl;
-    cout<<"Prenom Enfant est : "<<Lastname<<endl;
-    cout<<"Age du l'Enfant est : "<<Age.jour<<"/"<<Age.mois<<"/"<<Age.annee<<endl;
-
-}
-void Enfant::SetCodeEnfant(int c){
-    CodeEnfant = c;
-}
-void Enfant::SetName(string n){
-    Name = n;  
-}
-void Enfant::SetLastname(string p){
-    Lastname= p;
-}
-void Enfant::SetAge(DATE d){
-    Age.jour = d.jour;
-    Age.mois = d.mois;
-    Age.annee = d.annee;
-}
-int Enfant::GetCodeEnfant(){
-    return CodeEnfant;
-}
-string Enfant::GetName(){
-    return Name;
-}
-string Enfant::GetLastname(){
-    return Lastname;
-}
-DATE Enfant::GetAge(){
-    return Age;
-}
-int Enfant::GetDay(){
-    return Age.jour;
-}
-int Enfant::GetMonth(){
-    return Age.mois;
-}
-int Enfant::GetYear(){
-    return Age.annee;
-}
-Enfant::~Enfant(){}
+string Enfant::getNom() const { return nom; }
+string Enfant::getPrenom() const { return prenom; }

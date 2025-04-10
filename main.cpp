@@ -1,182 +1,191 @@
-#include "EnfantHandicape.cpp"
-#include <vector>
-#include <iomanip>
-#include <chrono>
+#include"creche.cpp"
 
-bool YesOrNo(string test){
-    if (test == "yes" || test == "no") return true;
-    else return false;
-}
-
-int calculateAge(int Day, int Month, int Year) {
-    time_t currentTime = time(nullptr);
-    tm* localTime = localtime(&currentTime);
-    int currentDay = localTime->tm_mday;
-    int currentMonth = localTime->tm_mon + 1;
-    int currentYear = 1900 + localTime->tm_year; 
-    int age = currentYear - Year;
-    if (currentMonth < Month || (currentMonth == Month && currentDay < Day)) age--; 
-
-    return age;
-}
-void compare(int a ,int b){
-    if (a<b) cout<<"1<2"<<endl;
-    else cout<<"2<1"<<endl;
-}
-
-
-int main(){
-    
-    vector<Enfant*> Ecole;
-    string choice;
-    int NbEnfant ;
-
-
-
-    cout<<"How many children you want to enter : ";
-    cin>>NbEnfant;
-
-    for (int i = 0;i<NbEnfant;i++){
-        
-        string WithDisease;
-        cout<<"********Does the child has a disease (Answer with 'yes' or 'no') "; 
+int main() {
+    Creche creche;
+    string firstChoix;
+    string Choix;
+    cout<<"Do you want to add a child or a test"<<endl;
+    cin>>firstChoix;
+    if (firstChoix == "yes"){
         do{
-            cout<<"Please type in a correct answer : ";
-            cin>>WithDisease;
+            cout<<"Enfant ou Babysitter ?"<<endl;;
+            cin>>Choix;
+            if (Choix == "enfant"){
+                string ChoixAjout;
+                do{
+                    int ChoixEnfant;
+                    cout<<"Enfant normal ou Enfant en permenance ?"<<endl;
+                    cin>>ChoixEnfant;
+                    string nom,prenom,specifineeds;
+                    int age,dureePermenance;
+                    vector <Allergie*> allergie;
 
-        }while(YesOrNo(WithDisease) == false);
-        
-        if (WithDisease == "yes"){
-            int Code,Day,Month,Year,Type;
-            string Name,Lastname;
-            cout<<"Type the Name of the child : ";
-            cin>>Name;
-            cout<<"Type the Lastname of the child : ";
-            cin>>Lastname;
-            cout<<"Type the date of birth of the child : "<<endl;;
-            cout<<"Day : ";
-            cin>>Day;
-            cout<<"Month : ";
-            cin>>Month;
-            cout<<"Year : ";
-            cin>>Year;
-            cout<<"Choose the diseaso of the child (1 = 'test' , 2 = 'test' , 3 = 'test') : ";
-            cin>>Type;
-            EnfantHandicape* e = new EnfantHandicape(i+1,Name,Lastname,{Day,Month,Year},Type);
-            Ecole.push_back(e);
-        }
-        else if (WithDisease == "no"){
-            int Code,Day,Month,Year;
-            string Name,Lastname;
-            cout<<"Type the Name of the child : ";
-            cin>>Name;
-            cout<<"Type the Lastname of the child : ";
-            cin>>Lastname;
-            cout<<"Type the date of birth of the child : "<<endl;;
-            cout<<"Day : ";
-            cin>>Day;
-            cout<<"Month : ";
-            cin>>Month;
-            cout<<"Year : ";
-            cin>>Year;
-            Enfant* e = new Enfant(i+1,Name,Lastname,{Day,Month,Year});
-            Ecole.push_back(e);
-        }
-        cout<<"***_________________________________***"<<endl;
+                    if (ChoixEnfant == 1){
+                        cout<<"Saisire le nom "<<endl;
+                        cin>>nom;
+                        cout<<"Saisire le prenom "<<endl;
+                        cin>>prenom;
+                        cout<<"Saisire l'age  "<<endl;
+                        cin>>age;
+                        cout<<"Saisire le specific needs "<<endl;
+                        cin>>specifineeds;
+                        Enfant e(nom,prenom,age,specifineeds);
+                        string ChoixAllergie;
+                        do{
+                            string aller;
+                            cout<<"Saisire l'allergie' "<<endl;
+                            cin>>aller;
+                            cout<<"add an other allergie?"<<endl;
+                            cin>>ChoixAllergie;
+                            Allergie a(aller);
+                            e.ajouterAllergie(&a);
+                        }while(ChoixAllergie == "oui");
+                        creche.ajouterEnfant(&e);
+                    }
+
+                    else if (ChoixEnfant == 2){
+                        cout<<"Saisire le nom "<<endl;
+                        cin>>nom;
+                        cout<<"Saisire le prenom "<<endl;
+                        cin>>prenom;
+                        cout<<"Saisire l'age  "<<endl;
+                        cin>>age;
+                        cout<<"Saisire le specific needs "<<endl;
+                        cin>>specifineeds;
+                        cout<<"Saisire duree permenance"<<endl;
+                        cin>>dureePermenance;
+                        EnfantEnPermanence e(nom,prenom,age,dureePermenance,specifineeds);
+                        string ChoixAllergie;
+                        do{
+                            string aller;
+                            cout<<"Saisire l'allergie' "<<endl;
+                            cin>>aller;
+                            cout<<"add an other allergie?"<<endl;
+                            cin>>ChoixAllergie;
+                            Allergie a(aller);
+                            e.ajouterAllergie(&a);
+                        }while(ChoixAllergie == "oui");
+                    }
+                    cout<<"would u like to add an other child"<<endl;
+                    cin>>ChoixAjout;
+                }while(ChoixAjout == "yes");
+            }
+
+            else if (Choix == "babysitter"){
+
+
+
+                string ChoixAjout;
+                do{
+                    int ChoixBabysitte;
+                    cout<<"Babysitter normal ou Babysitter en jour ?"<<endl;
+                    cin>>ChoixBabysitte;
+                    string nom,numerotelephone,horairetravail;
+                    int age;
+                    double salaireHoraire;
+
+                    if (ChoixBabysitte == 1){
+                        cout<<"Saisire le nom "<<endl;
+                        cin>>nom;
+                        cout<<"Saisire le prenom "<<endl;
+                        cin>>numerotelephone;
+                        cout<<"Saisire l'age  "<<endl;
+                        cin>>age;
+                        cout<<"Saisire le specific needs "<<endl;
+                        cin>>salaireHoraire;
+                        BabySitter b(nom,age,numerotelephone,salaireHoraire);
+                        creche.ajouterBabysitter(&b);
+                    }
+
+                    else if (ChoixBabysitte == 2){
+                        cout<<"Saisire le nom "<<endl;
+                        cin>>nom;
+                        cout<<"Saisire le numero de telephone "<<endl;
+                        cin>>numerotelephone;
+                        cout<<"Saisire l'age  "<<endl;
+                        cin>>age;
+                        cout<<"Saisire la salaire horaire "<<endl;
+                        cin>>salaireHoraire;
+                        cout<<"Saisire le horaire du travail  "<<endl;
+                        cin>>horairetravail;
+                        BabySitterJour b(nom,age,numerotelephone,salaireHoraire,horairetravail);
+                        creche.ajouterBabysitter(&b);
+                    }
+                    cout<<"would u like to add an other Babysitter?"<<endl;
+                    cin>>ChoixAjout;
+                }while(ChoixAjout == "yes");
+
+            }
+        }while(Choix !="enfant" || Choix !="babysitter");
     }
 
-    string More;
-    cout<<"Do you want to add more children : (Answer with 'yes' or 'no') : ";
-    cin>>More;
-    while(YesOrNo(More)){
-        if (More == "yes"){
+
+
+
+    //Menu : 
+    int ChoixMenu;
+    do
+    {   
+        cout<<"*****************Menu*****************"<<endl;
+        cout<<"1. Modification"<<endl;
+        cout<<"2. Traitement"<<endl;
+        cout<<"Type ur choice : ";
+        cin>>ChoixMenu;
+        switch (ChoixMenu)
+        {
+        case 1:
+            int ChoixModification;
+            do{
+
+                cout<<"*******************Modification***************"<<endl;
+                cout<<"1. Affichage Enfant"<<endl;
+                cout<<"2. Affichage EnfantEnPermenance"<<endl;
+                cout<<"3. Affichage Test"<<endl;
+                switch(ChoixModification){
+                    case 1 :
+                        break;
+                    case 2 :
+                        break;
+                    case 3 :
+                        break;
+                    default:
+                        break;
+                }
+            }while(ChoixModification != 9);
             
-        string WithDisease;
-        cout<<"********Does the child has a disease (Answer with 'yes' or 'no') "; 
-        do{
-            cout<<"Please type in a correct answer : ";
-            cin>>WithDisease;
-
-        }while(YesOrNo(WithDisease) == false);
+            break;
+        case 2:
+            
+            int ChoixTraitement;
+            do{ 
+                
+                cout<<"*********************Traitement*************"<<endl;
+                cout<<"1. plus grand enfant"<<endl;
+                cout<<"2. allergie specifiee"<<endl;
+                cout<<"3. "<<endl;
+                cout<<"4."<<endl;
+                cout<<"5."<<endl;
+                cin>>ChoixTraitement;
+                switch(ChoixTraitement){
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        break;
+                }
+            }while(ChoixTraitement != 9);
+            break;
         
-        if (WithDisease == "yes"){
-            int Code,Day,Month,Year,Type;
-            string Name,Lastname;
-            cout<<"Type the Name of the child : ";
-            cin>>Name;
-            cout<<"Type the Lastname of the child : ";
-            cin>>Lastname;
-            cout<<"Type the date of birth of the child : "<<endl;;
-            cout<<"Day : ";
-            cin>>Day;
-            cout<<"Month : ";
-            cin>>Month;
-            cout<<"Year : ";
-            cin>>Year;
-            cout<<"Choose the diseaso of the child (1 = 'test' , 2 = 'test' , 3 = 'test') : ";
-            cin>>Type;
-            EnfantHandicape* e = new EnfantHandicape(Ecole.size(),Name,Lastname,{Day,Month,Year},Type);
-            Ecole.push_back(e);
+        default:
+            break;
         }
-        else if (WithDisease == "no"){
-            int Code,Day,Month,Year;
-            string Name,Lastname;
-            cout<<"Type the Name of the child : ";
-            cin>>Name;
-            cout<<"Type the Lastname of the child : ";
-            cin>>Lastname;
-            cout<<"Type the date of birth of the child : "<<endl;;
-            cout<<"Day : ";
-            cin>>Day;
-            cout<<"Month : ";
-            cin>>Month;
-            cout<<"Year : ";
-            cin>>Year;
-            Enfant* e = new Enfant(Ecole.size(),Name,Lastname,{Day,Month,Year});
-            Ecole.push_back(e);
-        }
-        cout<<"***_________________________________***"<<endl;
-        cout<<"Do you want to add more children : (Answer with 'yes' or 'no') : ";
-        cin>>More;
-        }
-        else break;
-    }
-    cout<<endl<<"***********Affichage************"<<endl;
-    int sumE = 0,sumEh = 0,max = 0;
-
-    for (int i = 0;i<Ecole.size();i++){
-        if (typeid(*Ecole[i]) == typeid(Enfant*)) sumE +=1;
-        else sumEh +=1;
-        Ecole[i]->Afficher();
-        cout<<"**************************"<<endl;
-    }
-    cout<<"There is "<<sumE<<" normal children and "<<sumEh<<" children with disease"<<endl;
-
-    int Day = Ecole[0]->GetDay(); 
-    int Month = Ecole[0]->GetMonth(); 
-    int Year = Ecole[0]->GetYear();
-    int Max = calculateAge(Day,Month,Year);
-    int Min = calculateAge(Day,Month,Year);
-    int IndMax = 0;
-    int IndMin = 0;
-
-    for (int i = 0;i<Ecole.size()-1;i++){
-        int Day1 = Ecole[i]->GetDay(); 
-        int Month1 = Ecole[i]->GetMonth(); 
-        int Year1 = Ecole[i]->GetYear(); 
-        if (calculateAge(Day1,Month1,Year1) > Max) {
-            Max  = calculateAge(Day1,Month1,Year1);
-            IndMax = i;
-        }
-        if (calculateAge(Day1,Month1,Year1) < Min) {
-            Min  = calculateAge(Day1,Month1,Year1);
-            IndMin = i;
-        }
-    }
-
-    cout<<"The oldest child is the one with the code : "<<IndMax<<endl;
-    cout<<"The youngest child is the one with the code : "<<IndMin<<endl;
-
-    system("PAUSE");
-    return 1;
+    } while (ChoixMenu != 9);
+    return 0;
 }
