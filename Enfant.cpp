@@ -1,61 +1,51 @@
-#include "Enfant.h"
+#include "enfant.h"
 
-Enfant::Enfant() : nom(""), prenom(""), age(0), specificNeeds("") {}
-
-Enfant::Enfant(const string& nom, const string& prenom, int age, const string& specificNeeds)
-    : nom(nom), prenom(prenom), age(age), specificNeeds(specificNeeds) {}
-
- void Enfant::saisirEnfant() {
-    cout << "===== Saisie des informations d'un enfant =====\n";
-
-    cout << "Nom : ";
+Enfant::Enfant() : nom(""), prenom(""), age(0) {}
+Enfant::Enfant(string nom, string prenom, int age) : nom(nom), prenom(prenom), age(age) {}
+Enfant::Enfant(const Enfant& other) : nom(other.nom), prenom(other.prenom), age(other.age) {
+    for (auto act : other.activites) {
+        activites.push_back(new Activite(*act));
+    }
+}
+void Enfant::saisirEnfant(){
+    cout << "Tapez le nom du Enfant : \n";
     cin >> nom;
-
-    cout << "Prénom : ";
+    cout << "Tapez le prenom du Enfant : \n";
     cin >> prenom;
-
-    while (true) {
-        cout << "Âge : ";
-        cin >> age;
-        if (cin.fail() || age <= 0) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Veuillez entrer un âge valide !\n";
-        } else {
-            break;
-        }
-    }
-
-    cout << "Besoins spécifiques (laisser vide si aucun) : ";
-    cin.ignore();
-    getline(cin, specificNeeds);
-
-    cout << "Enfant enregistré avec succès !\n";
+    cout << "Tapez l'age du Enfant : \n";
+    cin >> age;
+    string choix;
+    cout << "Ajoutez activite?";
+    cin >> choix;
+    do{
+        Activite* act = new Activite;
+        string a;
+        cout<< "Saisir activite : ";
+        cin>> a;
+        *act = a;
+        ajouterActivite(act);
+        cout << "Ajoutez activite?";
+        cin >> choix;
+    }while(choix == "oui");
+   
+    
 }
-
-Enfant::Enfant(const Enfant& e) {
-    nom = e.nom;
-    prenom = e.prenom;
-    age = e.age ;
-    specificNeeds = e.specificNeeds ;
-    for (auto& a : e.allergie) {
-        allergie.push_back(new Allergie(*a));
-    }
-    cout <<"Constructeur de recopie appele !"<< endl;
+Enfant::~Enfant() {
+    for (auto act : activites) delete act;
 }
-
-void Enfant::ajouterAllergie(Allergie* a) {
-    allergie.push_back(a);
-}
-
 void Enfant::afficher() const {
-    cout << "Nom: " << nom << ", Prenom: " << prenom << ", Age: " << age << " ans";
-    if (!specificNeeds.empty()) {
-        cout << ", Besoins spécifiques: " << specificNeeds;
+    cout << "Nom: " << nom <<endl << "Prenom: " << prenom <<endl  << "age: " << age << endl;
+    for (auto act : activites) {
+        act->afficher();
+        cout<<"\n"<<endl;
     }
-    cout << "\n";
 }
-
-
-string Enfant::getNom() const { return nom; }
-string Enfant::getPrenom() const { return prenom; }
+void Enfant::ajouterActivite(Activite* act) {
+    activites.push_back(act);
+}
+string Enfant::getNom(){
+    return nom;
+}
+int Enfant::getAge() const{
+    return age;
+}

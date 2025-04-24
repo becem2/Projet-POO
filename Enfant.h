@@ -1,6 +1,4 @@
-
-#include "Allergie.cpp"
-
+#include "Activite.cpp"
 
 
 class Enfant {
@@ -8,17 +6,16 @@ class Enfant {
         string nom;
         string prenom;
         int age;
-        string specificNeeds;
-        vector <Allergie*> allergie;
-    
+        vector<Activite*> activites;
     public:
         Enfant();
-        Enfant(const string& nom, const string& prenom, int age, const string& specificNeeds = "");
-        Enfant(const Enfant&);
-        virtual void ajouterAllergie(Allergie*);
+        Enfant(string nom, string prenom, int age);
+        Enfant(const Enfant& other);
+        string getNom();
+        virtual void saisirEnfant();
+        virtual ~Enfant();
         virtual void afficher() const;
-        void saisirEnfant();
-        string getNom() const;
-        string getPrenom() const;
-        virtual ~Enfant() = default;
-    };
+        void ajouterActivite(Activite* act);
+        int getAge() const;
+        
+    }; 
