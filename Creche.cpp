@@ -1,9 +1,32 @@
 #include "Creche.h"
-#include <typeinfo>
-
 Creche::Creche() {
 }
-
+Creche::Creche(Creche& other){
+    for (int i = 0; i<other.enfants.size(); i++){
+        if (typeid(other.enfants[i])==typeid(Enfant)){
+            Enfant* e = new Enfant(*other.enfants[i]);
+            enfants.push_back(e);
+        }
+        else if (typeid(other.enfants[i])==typeid(EnfantPermanence)){
+            EnfantPermanence* e = dynamic_cast<EnfantPermanence*>(other.enfants[i]);
+            enfants.push_back(e);
+        }
+        else {
+            EnfantAvecAllergie* e = dynamic_cast<EnfantAvecAllergie*>(other.enfants[i]);
+            enfants.push_back(e);
+        }
+    }
+    for (int i = 0 ; i<other.employees.size();i++){
+        if (typeid(other.employees[i])==typeid(Employee)){
+            Employee* e = new Employee(*other.employees[i]);
+            employees.push_back(e);
+        }
+        else {
+            EmployeeBureautique * e = dynamic_cast<EmployeeBureautique*>(other.employees[i]);
+            employees.push_back(e);
+        }
+    }
+}
 Creche::~Creche() {
     for (int i =0;i<employees.size();i++) {
         delete employees[i];
@@ -12,294 +35,272 @@ Creche::~Creche() {
         delete enfants[i];
     }
 }
-
-void Creche::AjouterEmployee(employee* emp) {
-    employees.push_back(emp);
+void Creche::AjouterEmployee(Employee* e) {
+    employees.push_back(e);
 }
-
-void Creche::AjouterEnfant(Enfant* enf) {
-    enfants.push_back(enf);
+void Creche::AjouterEnfant(Enfant* e) {
+    enfants.push_back(e);
 }
-
-void Creche::afficherEmployeesNormaux() const {
+void Creche::afficherEmployeesNormaux() {
     int count = 0;
-    cout << "\n=== Employes Normaux ===" << endl;
+    cout << "\n=== Employés Normaux ===" << endl;
     
-    for (const auto& emp : employees) {
-        if (dynamic_cast<employeebureautique*>(emp) == nullptr) {
-            cout << "\n[Employe Normal #" << ++count << "]" << endl;
-            emp->afficherInfos();
+    for (int i = 0; i < employees.size(); i++) {
+        if (typeid(*employees[i]) == typeid(Employee)) {
+            count++;
+            cout << "Employé no " << count << " : " << endl;
+            employees[i]->afficher();
         }
     }
-    
     if (count == 0) {
-        cout << "Aucun employe normal dans la creche." << endl;
+        cout << "Aucun employé normal dans la creche." << endl;
     } else {
-        cout << "\nTotal employes normaux: " << count << endl;
+        cout << "Total employés normaux: " << count << endl;
     }
 }
-
-void Creche::afficherEmployeesBureautiques() const {
+void Creche::afficherEmployeesBureautiques() {
     int count = 0;
-    cout << "\n=== Employes Bureautiques ===" << endl;
-    
-    for (const auto& emp : employees) {
-        if (auto bureauEmp = dynamic_cast<employeebureautique*>(emp)) {
-            cout << "\n[Employe Bureautique #" << ++count << "]" << endl;
-            bureauEmp->afficherInfos();
-            cout << "Tache: " << bureauEmp->getTache() << endl;
+    cout << "\n=== Employés Bureautiques ===" << endl;
+    for (int i = 0; i < employees.size(); i++) {
+        if (typeid(*employees[i]) == typeid(EmployeeBureautique)) {
+            count++;
+            cout << "Employé no " << count << " : " << endl;
+            employees[i]->afficher();
         }
     }
-    
     if (count == 0) {
-        cout << "Aucun employe bureautique dans la creche." << endl;
+        cout << "Aucun employé bureautique dans la creche." << endl;
     } else {
-        cout << "\nTotal employes bureautiques: " << count << endl;
+        cout << "Total employés bureautiques: " << count << endl;
     }
 }
-
-
-void Creche::afficherEnfantsNormaux() const {
+void Creche::afficherEnfantsNormaux() {
     int count = 0;
     cout << "\n=== Enfants Normaux ===" << endl;
-    
-    for (const auto& enfant : enfants) {
-        if (dynamic_cast<EnfantPermanence*>(enfant) == nullptr && 
-            dynamic_cast<EnfantAvecAllergie*>(enfant) == nullptr) {
-            cout << "\n[Enfant Normal #" << ++count << "]" << endl;
-            enfant->afficher();
+    for (int i = 0; i < enfants.size(); i++) {
+        if (typeid(*enfants[i]) == typeid(Enfant)) {
+            count++;
+            cout << "Enfant no " << count << " : " << endl;
+            enfants[i]->afficher();
         }
     }
-    
     if (count == 0) {
         cout << "Aucun enfant normal dans la creche." << endl;
+    } else {
+        cout << "Total enfants normaux: " << count << endl;
     }
 }
-
-
-
-void Creche::afficherEnfantsPermanence() const {
+void Creche::afficherEnfantsPermanence() {
     int count = 0;
     cout << "\n=== Enfants en Permanence ===" << endl;
     
-    for (const auto& enfant : enfants) {
-        if (auto perm = dynamic_cast<EnfantPermanence*>(enfant)) {
-            cout << "\n[Enfant Permanence #" << ++count << "]" << endl;
-            perm->afficher();
-            cout << "Heure fin: " << perm->getFinPermanence() << endl;
+    for (int i = 0; i < enfants.size(); i++) {
+        if (typeid(*enfants[i]) == typeid(EnfantPermanence)) {
+            count++;
+            cout << "Enfant no " << count << " : " << endl;
+            enfants[i]->afficher();
         }
     }
-    
     if (count == 0) {
         cout << "Aucun enfant en permanence dans la creche." << endl;
+    } else {
+        cout << "Total enfants en permanence: " << count << endl;
     }
 }
-
-void Creche::afficherEnfantsAllergies() const {
+void Creche::afficherEnfantsAllergies() {
     int count = 0;
     cout << "\n=== Enfants avec Allergies ===" << endl;
-    
-    for (const auto& enfant : enfants) {
-        if (auto allergie = dynamic_cast<EnfantAvecAllergie*>(enfant)) {
-            cout << "\n[Enfant Allergie #" << ++count << "]" << endl;
-            allergie->afficher();
-            cout << "Allergie: " << allergie->getTypeAllergie() << endl;
+    for (int i = 0; i < enfants.size(); i++) {
+        if (typeid(*enfants[i]) == typeid(EnfantAvecAllergie)) {
+            count++;
+            cout << "Enfant no "<<count<<" : "<< endl;
+            enfants[i]->afficher();
         }
     }
-    
     if (count == 0) {
         cout << "Aucun enfant avec allergie dans la creche." << endl;
+    } else {
+        cout << "Total enfants avec allergies: " << count << endl;
     }
 }
-bool Creche::supprimerEmployee(const string& nom) {
-    for (auto it = employees.begin(); it != employees.end(); ++it) {
-        if ((*it)->getNom() == nom) {
-            delete *it;
-            employees.erase(it);
-            return true;
-        }
-    }
-    return false;
-}
-
-bool Creche::supprimerEnfant(const string& nom) {
-    for (auto it = enfants.begin(); it != enfants.end(); ++it) {
-        if ((*it)->getNom() == nom) {
-            delete *it;
-            enfants.erase(it);
-            return true;
-        }
-    }
-    return false;
-}
-
-void Creche::afficherListeEmployees() const {
-    cout << "\n=== Liste des employes ===" << endl;
-    for (const auto& emp : employees) {
-        cout << "- " << emp->getNom() << endl;
-    }
-}
-
-void Creche::afficherListeEnfants() const {
-    cout << "\n=== Liste des enfants ===" << endl;
-    for (const auto& enf : enfants) {
-        cout << "- " << enf->getNom() << endl;
-    }
-}
-
-employee* Creche::trouverEmployee(const string& nom) {
-    for (auto emp : employees) {
-        if (emp->getNom() == nom) {
-            return emp;
-        }
-    }
-    return nullptr;
-}
-
-Enfant* Creche::trouverEnfant(const string& nom) {
-    for (auto enf : enfants) {
-        if (enf->getNom() == nom) {
-            return enf;
-        }
-    }
-    return nullptr;
-}
-
-
-void Creche::afficherEmployees() const {
-    if (employees.empty()) {
-        cout << "Aucun employe dans la creche." << endl;
-        return;
-    }
-
-    cout << "\n=== Liste des employes ===" << endl;
-    for (size_t i = 0; i < employees.size(); ++i) {
-        cout << "\nEmploye #" << i+1 << ":" << endl;
-        employees[i]->afficherInfos();
-        
-        // Display specific info for office employees
-        if (auto bureauEmp = dynamic_cast<employeebureautique*>(employees[i])) {
-            cout << "Type: Employe bureautique" << endl;
-            cout << "Tache: " << bureauEmp->getTache() << endl;
+void Creche::supprimerEmployee(string nom) {
+    int i = 0;
+    bool found = false;
+    while (i < employees.size() && !found) {
+        if (employees[i]->getNom() == nom) {
+            found = true;
         } else {
-            cout << "Type: Employe normal" << endl;
+            i++;
         }
     }
-}
-
-void Creche::afficherEnfants() const {
-    if (enfants.empty()) {
-        cout << "Aucun enfant dans la creche." << endl;
-        return;
+    if (found) {
+        delete employees[i];
+        for (int j = i; j < employees.size() - 1; j++) {
+            employees[j] = employees[j+1];
+        }
+        employees.pop_back();
+        cout << "Employee supprime avec succes" << endl;
+    } else {
+        cout << "Aucun employee avec ce nom existe!" << endl;
     }
-
-    cout << "\n=== Liste des enfants ===" << endl;
-    for (size_t i = 0; i < enfants.size(); ++i) {
-        cout << "\nEnfant #" << i+1 << ":" << endl;
-        enfants[i]->afficher();
-        
-        if (auto perm = dynamic_cast<EnfantPermanence*>(enfants[i])) {
-            cout << "Type: Enfant en permanence" << endl;
-            cout << "Heure fin: " << perm->getFinPermanence() << endl;
-        } 
-        else if (auto allergie = dynamic_cast<EnfantAvecAllergie*>(enfants[i])) {
-            cout << "Type: Enfant avec allergie" << endl;
-            cout << "Allergie: " << allergie->getTypeAllergie() << endl;
-        } 
-        else {
-            cout << "Type: Enfant normal" << endl;
+}
+void Creche::supprimerEnfant(string nom) {
+    int i = 0;
+    bool trouve = false;
+    while (i < enfants.size() && !trouve) {
+        if (enfants[i]->getNom() == nom) {
+            trouve = true;
+        } else {
+            i++;
         }
     }
+    if (trouve) {
+        delete enfants[i];
+        for (int j = i; j < enfants.size() - 1; j++) {
+            enfants[j] = enfants[j+1];
+        }
+        enfants.pop_back();
+        cout << "Enfant supprime avec succes" << endl;
+    } else {
+        cout << "Aucun enfant avec ce nom existe!" << endl;
+    }
 }
-int Creche::compterEnfantsPermanence() const {
+void Creche::compterEnfantsPermanence()  {
     int count = 0;
-    for (const auto& enfant : enfants) {
-        if (dynamic_cast<EnfantPermanence*>(enfant) != nullptr) {
+    for (int i = 0;i<enfants.size();i++) {
+        if(typeid(enfants[i])== typeid(EnfantPermanence)){
             count++;
         }
     }
-    return count;
+    cout<<"Il ya "<<count<<" enfant en permenance"<<endl;
 }
-void Creche::listerEnfantsAvecAllergie(const string& typeAllergie) const {
+void Creche::listerEnfantsAvecAllergie( string typeAllergie)  {
     bool found = false;
-    
     cout << "\n=== ENFANTS AVEC ALLERGIE A " << typeAllergie << " ===" << endl;
-    
-    for (const auto& enfant : enfants) {
-        if (auto allergie = dynamic_cast<EnfantAvecAllergie*>(enfant)) {
-            if (allergie->getTypeAllergie() == typeAllergie) {
-                enfant->afficher();
-                cout << "Type d'allergie: " << allergie->getTypeAllergie() << endl;
-                cout << "---------------------" << endl;
-                found = true;
-            }
+    for (int i = 0; i < enfants.size(); ++i) {
+        EnfantAvecAllergie* e = dynamic_cast<EnfantAvecAllergie*>(enfants[i]);
+        if (e->getTypeAllergie() == typeAllergie) {
+            enfants[i]->afficher();
+            cout << "Type d'allergie: " << e->getTypeAllergie() << endl;
+            cout << "---------------------" << endl;
+            found = true;
         }
     }
-    
     if (!found) {
         cout << "Aucun enfant avec cette allergie trouve." << endl;
     }
 }
-
-
-void Creche::afficherPlusVieuxEnfant() const {
+void Creche::afficherPlusVieuxEnfant() {
     if (enfants.empty()) {
         cout << "Aucun enfant dans la creche." << endl;
         return;
     }
 
-    const Enfant* plusVieux = enfants[0];
-    for (const auto& enfant : enfants) {
-        if (enfant->getAge() > plusVieux->getAge()) {
-            plusVieux = enfant;
+    Enfant* plusVieux = enfants[0];
+    for (int i = 1; i < enfants.size(); ++i) {
+        if (*plusVieux < *enfants[i]) {
+            plusVieux = enfants[i];
         }
     }
 
     cout << "\n=== ENFANT LE PLUS AGE ===" << endl;
     plusVieux->afficher();
-    
- 
-    if (auto perm = dynamic_cast<const EnfantPermanence*>(plusVieux)) {
-        cout << "Type: Enfant en permanence" << endl;
-        cout << "Heure fin: " << perm->getFinPermanence() << endl;
-    } 
-    else if (auto allergie = dynamic_cast<const EnfantAvecAllergie*>(plusVieux)) {
-        cout << "Type: Enfant avec allergie" << endl;
-        cout << "Allergie: " << allergie->getTypeAllergie() << endl;
-    } 
-    else {
-        cout << "Type: Enfant normal" << endl;
-    }
 }
-
-
-void Creche::listerEnfantsMoinsDe10Ans() const {
-    const int AGE_LIMITE = 10;
+void Creche::listerEnfantsMoinsDe10Ans()  {
+    int ageLimit = 10;
     bool trouve = false;
-
-    cout << "\n=== ENFANTS DE MOINS DE " << AGE_LIMITE << " ANS ===" << endl;
-
-    for (const auto& enfant : enfants) {
-        if (enfant->getAge() < AGE_LIMITE) {
-            enfant->afficher();
-            
-            if (auto perm = dynamic_cast<const EnfantPermanence*>(enfant)) {
-                cout << "Type: Enfant en permanence" << endl;
-                cout << "Heure fin: " << perm->getFinPermanence() << endl;
-            } 
-            else if (auto allergie = dynamic_cast<const EnfantAvecAllergie*>(enfant)) {
-                cout << "Type: Enfant avec allergie" << endl;
-                cout << "Allergie: " << allergie->getTypeAllergie() << endl;
-            } 
-            else {
-                cout << "Type: Enfant normal" << endl;
-            }
+    cout << "\n=== ENFANTS DE MOINS DE " << ageLimit << " ANS ===" << endl;
+    for (int i = 0; i < enfants.size(); ++i) {
+        if (enfants[i]->getAge() < ageLimit) {
+            enfants[i]->afficher();
             cout << "---------------------" << endl;
             trouve = true;
         }
     }
-
     if (!trouve) {
-        cout << "Aucun enfant de moins de " << AGE_LIMITE << " ans trouve." << endl;
+        cout << "Aucun enfant de moins de " << ageLimit << " ans trouve." << endl;
     }
+}
+void Creche::afficherEmployeePlusHautSalaire() {
+    Employee* plusHautSalaire = employees[0];
+    for (int i = 1; i < employees.size(); ++i) {
+        if (employees[i]->getSalaireHoraire() > plusHautSalaire->getSalaireHoraire()) {
+            plusHautSalaire = employees[i];
+        }
+    }
+    cout << "\n=== EMPLOYE AVEC LE SALAIRE LE PLUS ELEVE ===" << endl;
+    plusHautSalaire->afficher();
+    cout << "Salaire: " << plusHautSalaire->getSalaireHoraire() << endl;
+}
+ostream& operator<<(ostream& out,Creche& creche) {
+    for (int i = 0;i<creche.employees.size();i++) {
+        if (typeid(creche.employees[i]) == typeid(Employee)) {
+            out<<creche.employees[i];
+        } else if (typeid(*creche.employees[i]) == typeid(EmployeeBureautique)) {
+            out<<creche.employees[i];
+        }
+    }
+    for (int i = 0;i<creche.enfants.size();i++) {
+        if (typeid(creche.enfants[i]) == typeid(Enfant)) {
+            out<<creche.enfants[i];
+        } else if (typeid(creche.enfants[i]) == typeid(EnfantPermanence)) {
+            out<<creche.enfants[i];
+        } else if (typeid(creche.enfants[i]) == typeid(EnfantAvecAllergie)) {
+            out<<creche.enfants[i];
+        }
+    }
+    return out;
+}
+istream& operator>>(istream& in, Creche& creche) {
+    int choixEnfantOuEmployee;
+    do {
+        cout << "Vous-voulez ajouter un Enfant ou un Employee (Enfant = 1, Employee = 2, Quitter = 9): ";
+        in >> choixEnfantOuEmployee;
+        if (choixEnfantOuEmployee == 1) {
+            int choixEnfant;
+            do {
+                cout << "Type d'enfant (1 = Normal, 2 = Permanence, 3 = Allergie): ";
+                in >> choixEnfant;
+                if (choixEnfant == 1) {
+                    Enfant* e = new Enfant();
+                    in >> *e;
+                    creche.AjouterEnfant(e);
+                    choixEnfantOuEmployee = -1;
+                }
+                else if (choixEnfant == 2) {
+                    EnfantPermanence* e = new EnfantPermanence();
+                    in >> *e;
+                    creche.AjouterEnfant(e);
+                    choixEnfantOuEmployee = -1;
+                }
+                else if (choixEnfant == 3) {
+                    EnfantAvecAllergie* e = new EnfantAvecAllergie();
+                    in >> *e;
+                    creche.AjouterEnfant(e);
+                    choixEnfantOuEmployee = -1;
+                }
+            } while (choixEnfant != 1 && choixEnfant != 2 && choixEnfant != 3);
+        }
+        else if (choixEnfantOuEmployee == 2) {
+            int choixEmployee;
+            do {
+                cout << "Type d'employé (1 = Normal, 2 = Bureautique): ";
+                in >> choixEmployee;
+                if (choixEmployee == 1) {
+                    Employee* e = new Employee();
+                    in >> *e;
+                    creche.AjouterEmployee(e);
+                    choixEnfantOuEmployee = -1;
+                }
+                else if (choixEmployee == 2) {
+                    EmployeeBureautique* e = new EmployeeBureautique();
+                    in >> *e; 
+                    creche.AjouterEmployee(e);
+                    choixEnfantOuEmployee = -1;
+                }
+            } while (choixEmployee != 1 && choixEmployee != 2);
+        }
+
+    } while (choixEnfantOuEmployee != 9);
+    return in;
 }

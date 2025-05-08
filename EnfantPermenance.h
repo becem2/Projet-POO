@@ -1,20 +1,18 @@
-#include "enfantAvecAllergie.cpp"
+#include "EnfantAvecAllergie.cpp"
 #include "Activitesupp.cpp"
-
 class EnfantPermanence : public Enfant{
 private:
     string finPermanence;
-    vector<ActiviteSupplementaire> activitessupp;
-
+    vector<ActiviteSupplementaire*> activitessupplementaires;
 public:
     EnfantPermanence();
-    EnfantPermanence(string fin, string activite);
-    string getFinPermanence() const;
-    void setFinPermanence(string fin);
-    void ajouterActivite(const ActiviteSupplementaire& act);
-    void afficherActivites() const;
+    EnfantPermanence(EnfantPermanence&);
+    ~EnfantPermanence();
+    string getFinPermanence() ;
+    void setFinPermanence(string );
+    void ajouterActivite(ActiviteSupplementaire* act);
     void saisirEnfant();
     void afficher();
-    ~EnfantPermanence();
+    friend istream& operator>> (istream&,EnfantPermanence&);
+    friend ostream& operator<< (ostream&,EnfantPermanence&);
 };
-

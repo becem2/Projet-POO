@@ -1,19 +1,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include <typeinfo>
 using namespace std;
-
-class employee {
+class Employee {
 protected:
     string nom;
     string prenom;
     int age;
     double salaireHoraire;
 public:
-    employee();
-    employee(string n,string p, int a, double salaire);
-    virtual void afficherInfos()  ;
+    Employee();
+    Employee(Employee&);
+    virtual ~Employee();
+    virtual void afficher()  ;
     virtual void surveillerEnfant() ;
     virtual string getNom() ;
     virtual void setNom(string) ;
@@ -22,6 +22,8 @@ public:
     virtual double getSalaireHoraire()  ;
     virtual void setSalaireHoraire(double) ;
     virtual void saisirEmployee();
-    virtual ~employee();
-    virtual double calculerSalaire(double heuresTravaillees) const;
+    virtual double calculerSalaire(double) ;
+    friend istream& operator>>(istream&,Employee&);
+    friend ostream& operator<<(ostream&,Employee&);
+    Employee operator+(const Employee&);
 };
